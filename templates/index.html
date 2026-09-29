@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DershaneMatik — Hafta Sonu Matematik Özel Ders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="brand">DershaneMatik</p>
+    <h1>Hafta Sonu Matematik Özel Dersini Kolayca Planla</h1>
+    <p class="lead">3 matematikçiden birini seç, uygun saatini al, gerisini bize bırak.</p>
+    <a class="btn" href="#talep-formu">Ders talep et</a>
+  </div>
+</header>
+<main class="wrap">
+  <section>
+    <h2>Nasıl çalışır?</h2>
+    <ol class="steps">
+      <li><b>Öğretmen seç</b><span>TYT, AYT ya da ikisi birden.</span></li>
+      <li><b>Gün ve saat seç</b><span>Cumartesi veya Pazar, 09:00–11:00.</span></li>
+      <li><b>Onayla</b><span>Saat sana ayrılır, öğretmen dönüş yapar.</span></li>
+    </ol>
+  </section>
+  <section>
+    <h2>Öğretmenler</h2>
+    <div class="teachers">
+      {% for id, o in ogretmenler.items() %}
+      <article class="teacher"><h3>{{ o.ad }}</h3><p>Uzmanlık: {{ o.uzmanlik }}</p><p>Müsait: Cumartesi ve Pazar</p></article>
+      {% endfor %}
+    </div>
+  </section>
+  <section id="talep-formu">
+    <h2>Talep formu</h2>
+    <form id="form" novalidate>
+      <label>Ad Soyad
+        <input name="ad_soyad" type="text" autocomplete="name" required>
+        <small class="err" data-for="ad_soyad"></small>
+      </label>
+      <label>E-posta
+        <input name="email" type="email" autocomplete="email" required>
+        <small class="err" data-for="email"></small>
+      </label>
+      <label>Hizmet
+        <select name="hizmet"><option value="{{ hizmet }}">{{ hizmet }}</option></select>
+      </label>
+      <label>Öğretmen
+        <select name="ogretmen_id" required>
+          <option value="">Seçin</option>
+          {% for id, o in ogretmenler.items() %}<option value="{{ id }}">{{ o.ad }} ({{ o.uzmanlik }})</option>{% endfor %}
+        </select>
+        <small class="err" data-for="ogretmen_id"></small>
+      </label>
+      <div class="row">
+        <label>Gün
+          <select name="gun" required>
+            <option value="">Seçin</option>
+            {% for k, v in gunler.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}
+          </select>
+          <small class="err" data-for="gun"></small>
+        </label>
+        <label>Saat
+          <select name="saat" required>
+            <option value="">Seçin</option>
+            {% for s in saatler %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
+          </select>
+          <small class="err" data-for="saat"></small>
+        </label>
+      </div>
+      <label>Not (isteğe bağlı)
+        <textarea name="not_metni" rows="3" maxlength="500"></textarea>
+        <small class="err" data-for="not_metni"></small>
+      </label>
+      <button class="btn" id="gonder" type="submit">Talebi gönder</button>
+      <p id="sonuc" role="status" aria-live="polite" hidden></p>
+    </form>
+    <p class="note"><a href="/doluluk">Boş saatleri gör →</a></p>
+  </section>
+</main>
+<footer><div class="wrap">DershaneMatik — kurgusal bir eğitim otomasyonu projesidir.</div></footer>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
